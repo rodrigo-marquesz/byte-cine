@@ -1,9 +1,14 @@
 const movieModel = require('../schemas/movies.schema');
+
 /* Falta criar regras de negócio*/
 class MovieService {
   // Cria um Novo Filme
   async createMovie(movie) {
+    const maxSeats = 40;
     const newMovie = new movieModel(movie);
+    if (newMovie.session.capacity > maxSeats) {
+      throw new Error(`Exceed the max seats capacity ${maxSeats}`);
+    }
     await newMovie.save();
     return newMovie;
   }

@@ -4,8 +4,10 @@ class MovieController {
   async createMovie(req, res) {
     try {
       const movie = await MovieService.createMovie(req.body);
+      console.log('Caiu aqui');
       res.status(201).json(movie);
     } catch (err) {
+      console.log(err);
       req.status(500).json({ error: err.message });
     }
   }
@@ -30,6 +32,7 @@ class MovieController {
       const movie = await MovieService.updateMovie(req.params.id, req.body);
       res.status(200).json(movie);
     } catch (err) {
+      console.log('Pelo menos chegou' + err);
       req.status(500).json({ error: err.message });
     }
   }
