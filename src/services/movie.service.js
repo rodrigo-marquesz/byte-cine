@@ -1,6 +1,5 @@
 const movieModel = require('../schemas/movies.schema');
 
-/* Falta criar regras de negócio*/
 class MovieService {
   // Cria um Novo Filme
   async createMovie(movie) {
@@ -41,6 +40,50 @@ class MovieService {
       throw new Error('Movie not found');
     }
     return movie;
+  }
+
+  /*
+  Compra ticket, buscando filme pelo title e shift da sessão.
+  Se encontrar filme, continua a lógica. 
+  Valida sempre se os tickets excedem a capacidade dos assentos do filme 
+  Se assento estiver disponível, marca o mesmo para false.
+  Caso contrário exibe erro.
+  Se assento não existir, criará o mesmo.
+  */
+  async buyTicket(title, shift, seat) {
+    try {
+      const movie = await movieModel.findOne({ title, 'session.shift': shift });
+      if (!movie) {
+        throw new Error('Movie not found');
+      }
+
+      const tickets = movie.session.tickets;
+      if (tickets.length >= movie.session.capacity) {
+        throw new Error('Exceed the max seats capacity');
+      }
+
+      const seatTicket = movie.session.tickets.find(
+        (tickets) => tickets.seat === seat
+      );
+      if (seatTicket) {
+        if (!seatTicket.isAvailable) {
+          throw new Error('This seat is already booked');
+        } else {
+          seatTicket.isAvailable = false;
+        }
+      } else {
+        tickets.push({
+          isAvailable: false,
+          seat: seat,
+          price: 12.5,
+        });
+      }
+
+      await movie.save();
+      return { message: 'Ticket successfully booked', movie };
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

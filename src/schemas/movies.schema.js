@@ -1,17 +1,25 @@
 const mongoose = require('mongoose');
 
 const movieSchema = new mongoose.Schema({
-  image: String,
-  title: String,
+  title: {
+    type: String,
+    required: true,
+  },
   description: String,
+  image_url: String,
   actors: [String],
   genre: String,
   session: {
+    shift: {
+      type: String,
+      required: true,
+    },
     capacity: Number,
     time: Date,
     room: String,
-    ticket: [
+    tickets: [
       {
+        isAvailable: Boolean,
         seat: String,
         price: Number,
       },
