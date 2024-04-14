@@ -13,6 +13,7 @@ const movieSchema = new mongoose.Schema({
     shift: {
       type: String,
       required: true,
+      enum: ['Morning', 'Afternoon', 'Evening'],
     },
     capacity: Number,
     time: Date,

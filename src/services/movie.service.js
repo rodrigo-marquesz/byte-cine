@@ -52,6 +52,13 @@ class MovieService {
   */
   async buyTicket(title, shift, seat) {
     try {
+      const validShifts = ['Morning', 'Afternoon', 'Evening'];
+      if (!validShifts.includes(shift)) {
+        throw new Error(
+          `Unknow shift. Valid shifts are only: ${validShifts.join(', ')}`
+        );
+      }
+
       const movie = await movieModel.findOne({ title, 'session.shift': shift });
       if (!movie) {
         throw new Error('Movie not found');
