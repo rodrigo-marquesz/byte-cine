@@ -10,7 +10,7 @@ services:
     env_file:
       - ./mongodb.env
     ports:
-      - 5017:27017
+      - 27017:27017
     volumes:
       - ./data/mongodb:/data/db
     networks:
@@ -21,7 +21,7 @@ services:
     restart: always
     container_name: MY_MONGO_EXPRESS
     ports:
-      - 5018:8081
+      - 8081:8081
     env_file:
       - ./mongo-express.env
     depends_on:
